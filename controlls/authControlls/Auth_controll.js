@@ -1,7 +1,73 @@
 import jwt from 'jsonwebtoken';
-import Auth_schema from '../../models/Auh_shema.js'; // Corrected the typo
+import Auth_schema from '../../models/Auh_shema.js';
 import bcrypt from 'bcrypt';
+import nodemailer from 'nodemailer';
+import otp_shema from '../../models/otp_shema.js';
+import otpGenerator from 'otp-generator';
 
+var transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: "kalairoman70@gmail.com",
+        pass: "rkaasoiricuaignl",
+    }
+});
+
+// opt call Back
+
+const CallBackOtp = async (_id, email) => {
+
+    try {
+        const response = await otpGenerator.generate(6, { upperCaseAlphabets: false, specialChars: false, lowerCaseAlphabets: false });
+
+        const saltcreate = await bcrypt.genSalt(10);
+        const hashedOtp = await bcrypt.hashSync(response, saltcreate);
+        await otp_shema.findOneAndUpdate({
+            email: email
+        }, { otp: hashedOtp, userId: _id, roleId: 2 }, { new: true, upsert: true, setDefaultsOnInsert: true });
+
+        var mailOptions = {
+            from: "kalairoman70@gmail.com",
+            bcc: email,
+            subject: 'Your Otp Here!',
+            html: `<div style="text-align:center,background-color:"red"><h1>Your Otp : ${response} </h1></div>`
+        };
+        await transporter.sendMail(mailOptions, function (error, info) {
+            if (error) {
+                console.log(error, "error");
+            } else {
+                console.log('Email sent');
+            }
+        });
+    } catch (error) {
+
+    }
+}
+
+// otp check
+
+export const OtpConfirm = async (req, res) => {
+
+    const { otp, userid } = req.body;
+
+    try {
+        const response = await otp_shema.findOne({ userId: userid });
+
+        const compareOtp = await bcrypt.compare(otp, response?.otp);
+
+        if (compareOtp) {
+            return res.status(200).json({ message: "Otp Correct" })
+
+        }
+        else {
+            return res.status(500).json({ message: "Wrong Otp!" })
+        }
+
+    } catch (error) {
+        return res.status(500).json({ message: error })
+
+    }
+}
 // Register User
 export const RegisterUser = async (req, res) => {
     const {
@@ -59,7 +125,8 @@ export const LoginUser = async (req, res) => {
                 const token=await jwt.sign({_id:existUser?._id},process.env.TOKEN,{expiresIn:"5d"})
                 if(hashedPassword)
                     {
-                        res.status(200).json({ status: true, data: existUser,token:token });
+                        CallBackOtp(existUser?._id, existUser?.email)                        
+                        return res.status(200).json({ status: true, data: existUser,token:token });
                     }
                     else
                     {
