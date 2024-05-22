@@ -24,7 +24,7 @@ const CallBackOtp = async (_id, email) => {
         const hashedOtp = await bcrypt.hashSync(response, saltcreate);
         await otp_shema.findOneAndUpdate({
             email: email
-        }, { otp: hashedOtp, userId: _id, roleId: 2 }, { new: true, upsert: true, setDefaultsOnInsert: true });
+        }, { otp: hashedOtp, userId: _id, userStatus: 2 }, { new: true, upsert: true, setDefaultsOnInsert: true });
 
         var mailOptions = {
             from: "kalairoman70@gmail.com",

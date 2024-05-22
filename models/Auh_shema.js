@@ -57,6 +57,9 @@ const auth_shema=new mongoose.Schema({
     userType:{
         type:String,
         default:"enduser"
+    },
+    address:{
+        type:String
     }
 },
 {
