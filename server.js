@@ -13,7 +13,7 @@ const app=express();
 app.use(express.json());
 app.use(morgan("dev"));
 app.use(helmet());
-app.use(cors({ credentials: true}));
+app.use(cors({ credentials: true,origin: "http://localhost:3000"}));
 
 // apis
 app.use("/api/trust",routing)
