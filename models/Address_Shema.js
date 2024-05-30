@@ -1,6 +1,3 @@
-
-
-
 import mongoose from 'mongoose';
 const Address_shema = new mongoose.Schema({
     username: {

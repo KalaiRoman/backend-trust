@@ -11,12 +11,11 @@ dotenv.config();
 ConnectDB();
 const app=express();
 app.use(express.json());
-app.use(morgan("dev"));
+app.use(morgan(`${process.env.MARGAN_PLATFORM}`));
 app.use(helmet());
-app.use(cors({ credentials: true,origin: "http://localhost:3000"}));
-
+app.use(cors({ credentials: process.env.CREDENTIALS,origin: 'http://localhost:3000'}));
 // apis
 app.use("/api/trust",routing)
 app.listen(process.env.PORT,()=>{
-console.log(`server Running Port ${process.env.PORT}`);
+console.log(`server Running http:localhost:${process.env.PORT}`);
 })

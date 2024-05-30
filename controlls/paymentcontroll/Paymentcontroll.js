@@ -46,7 +46,7 @@ export const CreateOrderPayment=async(req,res)=>{
                     }
                     else
                     {
-                        const response=await payment_shema({
+                        const responses=await payment_shema({
                             orderId:response?.id,
                             paymentMethod,
                             amount:amount,

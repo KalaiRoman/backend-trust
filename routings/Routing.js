@@ -6,5 +6,4 @@ const routing=express.Router();
 routing.use("/auth",authrouter);
 routing.use("/address", addressrouter);
 routing.use("/payment",paymentrouter );
-
 export default routing;

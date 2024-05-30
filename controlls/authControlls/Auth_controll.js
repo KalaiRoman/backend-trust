@@ -14,12 +14,9 @@ var transporter = nodemailer.createTransport({
 });
 
 // opt call Back
-
 const CallBackOtp = async (_id, email) => {
-
     try {
         const response = await otpGenerator.generate(6, { upperCaseAlphabets: false, specialChars: false, lowerCaseAlphabets: false });
-
         const saltcreate = await bcrypt.genSalt(10);
         const hashedOtp = await bcrypt.hashSync(response, saltcreate);
         await otp_shema.findOneAndUpdate({
@@ -47,22 +44,17 @@ const CallBackOtp = async (_id, email) => {
 // otp check
 
 export const OtpConfirm = async (req, res) => {
-
     const { otp, userid } = req.body;
-
     try {
         const response = await otp_shema.findOne({ userId: userid });
-
         const compareOtp = await bcrypt.compare(otp, response?.otp);
-
         if (compareOtp) {
-            return res.status(200).json({ message: "Otp Correct" })
-
+            const token=await jwt.sign({_id:userid},process.env.TOKEN,{expiresIn:"5d"})
+            return res.status(200).json({ message: "Otp Correct",status:true,token:token })
         }
         else {
             return res.status(500).json({ message: "Wrong Otp!" })
         }
-
     } catch (error) {
         return res.status(500).json({ message: error })
 
@@ -75,7 +67,6 @@ export const RegisterUser = async (req, res) => {
         email,
         password,
         mobileNo,
-        avatar
     } = req.body;
 
     try {
@@ -89,7 +80,7 @@ export const RegisterUser = async (req, res) => {
             email,
             password: hashedPassword,
             mobileNo,
-            avatar: avatar || "https://img.freepik.com/free-psd/3d-illustration-person_23-2149436192.jpg", 
+            avatar:"https://img.freepik.com/free-psd/3d-illustration-person_23-2149436192.jpg", 
             userStatus: 1, 
             description:  "",
             socialFacebook: "",
@@ -99,9 +90,9 @@ export const RegisterUser = async (req, res) => {
             approvalStatus:true,
             userType: "enduser" 
         });
-
         await newUser.save();
-        res.status(201).json({ status: true, data: newUser });
+        await CallBackOtp(newUser?._id, newUser?.email)                        
+        return res.status(201).json({ status: true, data: newUser });
     } catch (error) {
         console.error(error); 
         res.status(500).json({ status: false, message: "Server error" });
@@ -125,8 +116,8 @@ export const LoginUser = async (req, res) => {
                 const token=await jwt.sign({_id:existUser?._id},process.env.TOKEN,{expiresIn:"5d"})
                 if(hashedPassword)
                     {
-                        CallBackOtp(existUser?._id, existUser?.email)                        
-                        return res.status(200).json({ status: true, data: existUser,token:token });
+                        await CallBackOtp(existUser?._id, existUser?.email)                        
+                        return res.status(200).json({ status: true, data: existUser,token:token,message:"user Login Successfully" });
                     }
                     else
                     {
