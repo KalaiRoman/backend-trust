@@ -8,8 +8,12 @@ import otpGenerator from 'otp-generator';
 var transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-        user: "kalairoman70@gmail.com",
-        pass: "rkaasoiricuaignl",
+        // user: "kalairoman70@gmail.com",
+        // pass: "rkaasoiricuaignl",
+        // tkyj eycn yzec wjqo
+
+        user:"suportpureheart@gmail.com",
+        pass:"akumdcdszrtlqcnl"
     }
 });
 
@@ -24,7 +28,7 @@ const CallBackOtp = async (_id, email) => {
         }, { otp: hashedOtp, userId: _id, userStatus: 2 }, { new: true, upsert: true, setDefaultsOnInsert: true });
 
         var mailOptions = {
-            from: "kalairoman70@gmail.com",
+            from: "suportpureheart@gmail.com",
             bcc: email,
             subject: 'Your Otp Here!',
             html: `<div style="text-align:center,background-color:"red"><h1>Your Otp : ${response} </h1></div>`
@@ -33,7 +37,7 @@ const CallBackOtp = async (_id, email) => {
             if (error) {
                 console.log(error, "error");
             } else {
-                console.log('Email sent');
+                console.log('Email sent Successfully');
             }
         });
     } catch (error) {
