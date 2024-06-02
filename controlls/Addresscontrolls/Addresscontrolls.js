@@ -7,11 +7,7 @@ export const createAddress = async (req, res, next) => {
         username,
         contactno,
         alternateno,
-        street,
-        city,
-        pincode,
         address,
-        locationtype,
     } = req.body;
     try {
 
@@ -19,16 +15,12 @@ export const createAddress = async (req, res, next) => {
             username,
             contactno,
             alternateno,
-            street,
-            city,
-            pincode,
             address,
-            locationtype,
             user: req.userid,
             userid: req.userid
         });
         response.save();
-        res.status(201).json({ message: "Address Created" })
+        res.status(201).json({ message: "Address Created",status:true })
 
     } catch (error) {
         res.status(404).json({ message: "error address create", });
@@ -55,7 +47,7 @@ export const editAddress = async (req, res, next) => {
 export const allAddress = async (req, res, next) => {
     try {
         const response = await Address_Shema.find({ userid: req.userid }).populate("user");
-        res.status(200).json({ message: "success", data: response })
+        res.status(200).json({ message: "success", data: response,status:true })
     } catch (error) {
         res.status(404).json({ message: "error address get", });
 

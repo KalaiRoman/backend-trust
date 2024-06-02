@@ -12,23 +12,7 @@ const Address_shema = new mongoose.Schema({
         type: String,
         required: true
     },
-    street: {
-        type: String,
-        required: true
-    },
-    city: {
-        type: String,
-        required: true
-    },
-    pincode: {
-        type: String,
-        required: true
-    },
-    address: {
-        type: String,
-        required: true
-    },
-    locationtype: {
+   address: {
         type: String,
         required: true
     },
