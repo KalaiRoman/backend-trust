@@ -135,3 +135,41 @@ export const LoginUser = async (req, res) => {
         res.status(500).json({ status: false, message: "Server error" });
     }
 }
+
+// forget password send mail
+
+export const ForgetPasswordMailsend = async (req, res) => {
+    const {email} = req.body;
+    try {
+        const existUser = await Auth_schema.findOne({ "email":email});
+        if(existUser)
+            {
+                const token=await jwt.sign({_id:existUser?._id},process.env.TOKEN,{expiresIn:"10ms"});
+                var mailOptions = {
+                    from: "suportpureheart@gmail.com",
+                    bcc: email,
+                    subject: 'Forget Password',
+                    html: `<div style="text-align:center,background-color:"red">
+                    <a href={http://localhost:3000/change-password/${token}}>
+                    Change Password
+                    </a>
+                    </div>`
+                };
+                await transporter.sendMail(mailOptions, function (error, info) {
+                    if (error) {
+                        console.log(error, "error");
+                    } else {
+                        console.log('Email sent Successfully');
+                    }
+                });
+                               
+                        return res.status(200).json({ status: true, data: existUser,token:token,message:"Email send Successfully" });
+                   
+            }
+            else{
+        res.status(500).json({ status: false, message: "User not Found" });  
+            }
+    } catch (error) {
+        res.status(500).json({ status: false, message: "Server error" });
+    }
+}
