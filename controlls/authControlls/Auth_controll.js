@@ -149,12 +149,22 @@ export const ForgetPasswordMailsend = async (req, res) => {
                     from: "suportpureheart@gmail.com",
                     bcc: email,
                     subject: 'Forget Password',
-                    html: `<div style="text-align:center,background-color:"red">
-                    <a href={http://localhost:3000/change-password/${token}}>
-                    Change Password
-                    </a>
-                    </div>`
+                    html: `
+                        <div style="width: 100%; height: 100%; overflow-x: hidden; padding: 30px;">
+                            <div></div>
+                            <div>
+                                <img src="https://img.freepik.com/free-vector/forgot-password-concept-illustration_114360-1095.jpg" alt="no image"
+                                    style="width: 100%; height: 300px; object-fit: contain;" />
+                            </div>
+                            <div style="padding-top: 40px;">
+                                <a href="http://localhost:3000/change-password?token=${token}" 
+                                    style="background-color: #08cc7f; padding: 10px; color: white; text-decoration: none; border-radius: 10px; cursor: pointer; margin-top: 20px;">
+                                    Change password
+                                </a>
+                            </div>
+                        </div>`
                 };
+                
                 await transporter.sendMail(mailOptions, function (error, info) {
                     if (error) {
                         console.log(error, "error");
@@ -167,9 +177,24 @@ export const ForgetPasswordMailsend = async (req, res) => {
                    
             }
             else{
-        res.status(500).json({ status: false, message: "User not Found" });  
+        return res.status(404).json({ status: false, message: "User not Found" });  
             }
     } catch (error) {
-        res.status(500).json({ status: false, message: "Server error" });
+        return res.status(500).json({ status: false, message: "Server error" });
+    }
+}
+
+// change password
+
+export const changepassworduser=async(req,res)=>{
+
+    const {password,userId}=req.body;
+    try {
+        const gensalt=await bcrypt.genSalt(10);
+        const hashedPassword=await bcrypt.hashSync(password,gensalt);
+        const response=await Auth_schema.findByIdAndUpdate({_id:userId},{password:hashedPassword},{new:true});
+        return res.status(201).json({message:"updated Password",status:true});
+    } catch (error) {
+        return res.status(404).json({message:error,status:false});
     }
 }
