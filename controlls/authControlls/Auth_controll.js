@@ -198,3 +198,18 @@ export const changepassworduser=async(req,res)=>{
         return res.status(404).json({message:error,status:false});
     }
 }
+
+// get profile
+
+// change password
+
+export const getProfileData=async(req,res)=>{
+
+    try {
+        const response = await Auth_schema.findById({ "_id":req.userid});
+
+        return res.status(200).json({message:"get User Data",data:response,status:true});
+    } catch (error) {
+        return res.status(404).json({message:error,status:false});
+    }
+}
