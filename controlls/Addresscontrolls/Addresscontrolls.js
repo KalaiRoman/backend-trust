@@ -35,7 +35,7 @@ export const editAddress = async (req, res, next) => {
     const id = req.params.id;
     try {
         const resposne = await Address_Shema.findByIdAndUpdate(id, req.body, { new: true });
-        res.status(200).json({ message: "Updated Address" })
+        res.status(200).json({ message: "Updated Address",status:true })
 
     } catch (error) {
         res.status(404).json({ message: "error address update" });
@@ -59,7 +59,7 @@ export const singleAddress = async (req, res, next) => {
     const id = req.params.id;
     try {
         const response = await Address_Shema.findById(id);
-        res.status(200).json({ message: "success", data: response })
+        res.status(200).json({ message: "success", status:true,data: response })
 
     } catch (error) {
         res.status(404).json({ message: "error address get", });
