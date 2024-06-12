@@ -120,7 +120,7 @@ export const LoginUser = async (req, res) => {
                 const token=await jwt.sign({_id:existUser?._id},process.env.TOKEN,{expiresIn:"5d"})
                 if(hashedPassword)
                     {
-                        await CallBackOtp(existUser?._id, existUser?.email)                        
+                        // await CallBackOtp(existUser?._id, existUser?.email)                        
                         return res.status(200).json({ status: true, data: existUser,token:token,message:"user Login Successfully" });
                     }
                     else
@@ -209,6 +209,21 @@ export const getProfileData=async(req,res)=>{
         const response = await Auth_schema.findById({ "_id":req.userid});
 
         return res.status(200).json({message:"get User Data",data:response,status:true});
+    } catch (error) {
+        return res.status(404).json({message:error,status:false});
+    }
+}
+
+
+// update profile
+
+// change password
+
+export const profileUpdateUser=async(req,res)=>{
+
+    try {
+        const response = await Auth_schema.findByIdAndUpdate({ "_id":req.userid},req.body,{new:true});
+        return res.status(200).json({message:"User Profile Updated",data:response,status:true});
     } catch (error) {
         return res.status(404).json({message:error,status:false});
     }

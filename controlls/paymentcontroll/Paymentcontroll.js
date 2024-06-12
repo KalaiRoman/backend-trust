@@ -44,3 +44,24 @@ export const CreateOrderPayment = async (req, res) => {
         res.status(500).json({ status: false, message: "Internal Server Error" });
     }
 };
+
+
+
+// get find user payment
+
+
+export const FindUserPayment=async(req,res)=>{
+    try {
+
+        const response=await payment_shema.find({user:req.userid});
+
+        if(response)
+            {
+return res.status(200).json({message:"success",status:true,data:response});
+            }
+        
+    } catch (error) {
+        return res.status(500).json({ status: false, message: "Internal Server Error" });
+        
+    }
+}
