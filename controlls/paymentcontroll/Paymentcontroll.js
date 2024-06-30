@@ -65,3 +65,20 @@ return res.status(200).json({message:"success",status:true,data:response});
         
     }
 }
+
+// get All user payment
+
+
+export const AllPaymentAdmin=async(req,res)=>{
+    try {
+
+        const response=await payment_shema.find({}).lean().populate("user").populate("address");
+        if(response)
+            {
+return res.status(200).json({message:"success",status:true,data:response});
+            }
+    } catch (error) {
+        return res.status(500).json({ status: false, message: "Internal Server Error" });
+        
+    }
+}

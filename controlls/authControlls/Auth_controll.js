@@ -207,7 +207,6 @@ export const getProfileData=async(req,res)=>{
 
     try {
         const response = await Auth_schema.findById({ "_id":req.userid});
-
         return res.status(200).json({message:"get User Data",data:response,status:true});
     } catch (error) {
         return res.status(404).json({message:error,status:false});
@@ -223,6 +222,19 @@ export const profileUpdateUser=async(req,res)=>{
 
     try {
         const response = await Auth_schema.findByIdAndUpdate({ "_id":req.userid},req.body,{new:true});
+        return res.status(200).json({message:"User Profile Updated",data:response,status:true});
+    } catch (error) {
+        return res.status(404).json({message:error,status:false});
+    }
+}
+
+
+// all users
+
+export const Allusers=async(req,res)=>{
+
+    try {
+        const response = await Auth_schema.find({}).lean();
         return res.status(200).json({message:"User Profile Updated",data:response,status:true});
     } catch (error) {
         return res.status(404).json({message:error,status:false});

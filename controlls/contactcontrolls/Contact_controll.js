@@ -42,7 +42,7 @@ export const create_mail = async (req, res) => {
 export const get_all_mail=async(req,res)=>{
    
     try {
-        const response=await Contact_shema.find({});
+        const response=await Contact_shema.find({}).lean();
         return res.status(200).json({message:"All Contact Details",status:true,data:response});
     } catch (error) {
         return res.status(404).json({message:error,status:false});
