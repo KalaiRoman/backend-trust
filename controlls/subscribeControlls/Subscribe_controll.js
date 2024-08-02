@@ -2,24 +2,25 @@
 
 import Contact_shema from "../../models/Contact_shema.js"
 import subscribe_shema from "../../models/subscribe_shema.js";
+import Auth_schema from '../../models/Auh_shema.js';
 
 export const create_subscribe_mail = async (req, res) => {
     const { email } = req.body;
 
     try {
-        const existingUser = await subscribe_shema.findOne({email:email });
+        const existingUser = await subscribe_shema.findOne({Email:email });
+        const existUserAuth = await Auth_schema.findOne({email:email });
 
 
-        if (existingUser) {
-            return res.status(400).json({ message: "Email Already Exists", status: false });
+
+        if (existingUser || existUserAuth) {
+            return res.status(400).json({ message: "Email Already Taken", status: false });
         } 
       
         else {
             const newContact = await new subscribe_shema({
-              
                 Email:email
             });
-
             await newContact.save();
             return res.status(201).json({ message: "Thank You For Subscriber", status: true });
         }
