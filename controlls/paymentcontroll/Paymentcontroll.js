@@ -89,44 +89,43 @@ return res.status(200).json({message:"success",status:true,data:response});
 
 
 export const invoiceCreate = async (req, res) => {
-    console.log(req.body);
     try {
-      pdf.create(InvoiceTemplate(req.body), {}).toFile('result.pdf', (err, result) => {
+      pdf.create(InvoiceTemplate(req.body), {}).toFile('./Invoice/result.pdf', (err, result) => {
         if (err) {
           console.log(err);
           return res.status(500).send('Error creating PDF');
         }
-        console.log(result, "result");
-        return res.status(200).send('PDF created successfully');
+        console.log(result.filename.slice(-10), "result");
+        return res.status(200).json({message:"Pdf Created Successfully",data:result.filename.slice(-10)})
       });
     } catch (error) {
       console.log(error);
       res.status(500).send('Internal Server Error');
     }
   };
-  const __dirname = path.resolve();
+//   const __dirname = path.resolve();
 
-  export const DownloadPdf = async (req, res) => {
-    try {
-        // const filePath = path.join(__dirname, "Invoice", 'result.pdf');
-        const filePath=res.sendFile(path.join(__dirname, "Invoice", 'result.pdf'))
-        // fs.readFile(filePath, (err, data) => {
-        //     if (err) {
-        //       console.error('Error reading file:', err);
-        //     } else {
-        //       res.status(200).json(data);
-        //     }
-        //   });
+//   export const DownloadPdf = async (req, res) => {
+//     try {
+//         // const filePath = path.join(__dirname, "Invoice", 'result.pdf');
+//         const filePath=res.readFile('./Invoice/result.pdf')
+//         fs.readFile(filePath, (err, data) => {
+//             if (err) {
+//               console.error('Error reading file:', err);
+//             } else {
+//               res.status(200).json(data);
+//             }
+//           });
 
-        console.log(filePath,"kalai")
-    //   res.sendFile(filePath, (err) => {
-    //     if (err) {
-    //       console.log(err);
-    //       res.status(500).send('Error sending PDF file');
-    //     }
-    //   });
-    } catch (error) {
-      console.log(error);
-      res.status(500).send('Internal Server Error');
-    }
-  };
+//         console.log(filePath,"kalai")
+//     //   res.sendFile(filePath, (err) => {
+//     //     if (err) {
+//     //       console.log(err);
+//     //       res.status(500).send('Error sending PDF file');
+//     //     }
+//     //   });
+//     } catch (error) {
+//       console.log(error);
+//       res.status(500).send('Internal Server Error');
+//     }
+//   };
