@@ -1,9 +1,10 @@
 
 import express from "express";
-import { Allusers, ForgetPasswordMailsend, LoginUser, OtpConfirm, RegisterUser,changepassworduser, getProfileData, profileUpdateUser } from "./Auth_controll.js";
+import { Allusers, ForgetPasswordMailsend, LoginUser, OtpConfirm, RegisterUser,changepassworduser, getProfileData, SubUserAdmin,profileUpdateUser } from "./Auth_controll.js";
 import { verifyToken } from './../../middleware/Tokenverification.js';
 const authrouter=express.Router();
 authrouter.post("/register",RegisterUser);
+authrouter.post("/subadmin",SubUserAdmin);
 authrouter.post("/login",LoginUser);
 authrouter.post("/otp",OtpConfirm);
 authrouter.post("/email-send/forget-password",ForgetPasswordMailsend);

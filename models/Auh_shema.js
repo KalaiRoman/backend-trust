@@ -64,6 +64,10 @@ const auth_shema=new mongoose.Schema({
     reviewStatus:{
         type:Boolean,
         default:false
+    },
+    permissions:{
+        type:Array,
+        default:[]
     }
 },
 {

@@ -286,3 +286,105 @@ export const Allusers=async(req,res)=>{
         return res.status(404).json({message:error,status:false});
     }
 }
+
+// sub Admin User
+
+export const SubUserAdmin = async (req, res) => {
+    const {
+        userName,
+        email,
+        password,
+        mobileNo,
+    } = req.body;
+
+    try {
+        const existUser = await Auth_schema.findOne({ $or: [{ email }, { mobileNo }] });
+        const emailUserName=existUser?.email===email;
+        if (existUser) return res.status(400).json({ status: false, message: `${emailUserName?"Email is already exists!":"Mobile No is already exists!"}` });
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
+        const newUser = new Auth_schema({
+            userName,
+            email,
+            password: hashedPassword,
+            mobileNo,
+            avatar:"https://img.freepik.com/free-psd/3d-illustration-person_23-2149436192.jpg", 
+            userStatus: 1, 
+            description:  "",
+            socialFacebook: "",
+            socialYoutube: "",
+            socialInstagram:"",
+            chatMessage: [],
+            approvalStatus:true,
+            userType: "subadmin" 
+        });
+        var mailOptions = {
+            from: "suportpureheart@gmail.com",
+            bcc: email,
+            subject: 'Sub Admin User',
+            html: `
+            <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Welcome to PureHeartTrust Sub Admin</title>
+  <!--[if mso]><style type="text/css">body, table, td, a { font-family: Arial, Helvetica, sans-serif !important; }</style><![endif]-->
+</head>
+
+<body style="font-family: Helvetica, Arial, sans-serif; margin: 0px; padding: 0px; background-color: #ffffff;">
+  <table role="presentation"
+    style="width: 100%; border-collapse: collapse; border: 0px; border-spacing: 0px; font-family: Arial, Helvetica, sans-serif; background-color: rgb(239, 239, 239);">
+    <tbody>
+      <tr>
+        <td align="center" style="padding: 1rem 2rem; vertical-align: top; width: 100%;">
+          <table role="presentation" style="max-width: 600px; border-collapse: collapse; border: 0px; border-spacing: 0px; text-align: left;">
+            <tbody>
+              <tr>
+                <td>
+                  <div style="padding: 20px; background-color: rgb(255, 255, 255); width: 470px;">
+                    <div style="color: rgb(0, 0, 0); text-align: left;">
+                      <p style="padding-bottom: 16px">Dear ${userName},</p>
+                      <p style="padding-bottom: 16px">password: ${password}</p>
+                      <p style="padding-bottom: 16px">If this email is not relevant to you, please ignore this email.</p>
+                      <p style="padding-bottom: 8px">Regards,<br/><b>Anu Kulkarni - Founder and Director</b></p>
+                      <p><b>"I have Risen From The Ashes Of My Past To Create a Future For Myself"</b></p>
+                    </div>
+                    <div style="text-align: center;">
+                      <img width="200" src="https://womeyn-prod-statics.s3.ap-southeast-2.amazonaws.com/img/womeyn_logo.png"
+              alt="Womeyn Logo"/>
+                    </div>
+                    <div style="text-align: center;">
+                      <p><b>"I have Risen From The Ashes Of My Past To Create a Future For Myself"</b></p>
+                    </div>
+                  </div>
+                  
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</body>
+
+</html>    
+            `
+        };
+        
+        await transporter.sendMail(mailOptions, function (error, info) {
+            if (error) {
+                console.log(error, "error");
+            } else {
+                console.log('Email sent Successfully');
+            }
+        });
+        await newUser.save();
+        return res.status(201).json({ status: true, data: newUser });
+    } catch (error) {
+        console.error(error); 
+        res.status(500).json({ status: false, message: "Server error" });
+    }
+}
