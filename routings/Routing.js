@@ -5,12 +5,14 @@ import paymentrouter from "../controlls/paymentcontroll/index.js";
 import contactrouter from "../controlls/contactcontrolls/index.js";
 import subscriberouter from "../controlls/subscribeControlls/index.js";
 import adminRouterover from "../controlls/adminalldatas/index.js";
+import review_router from "../controlls/reviewControll/index.js";
 const routing=express.Router();
 routing.use("/auth",authrouter);
 routing.use("/address", addressrouter);
 routing.use("/payment",paymentrouter );
 routing.use("/contact",contactrouter );
 routing.use("/subscribe",subscriberouter );
+routing.use("/review",review_router );
 routing.use("/admin",adminRouterover);
 
 

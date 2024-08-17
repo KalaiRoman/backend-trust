@@ -60,6 +60,10 @@ const auth_shema=new mongoose.Schema({
     },
     address:{
         type:String
+    },
+    reviewStatus:{
+        type:Boolean,
+        default:false
     }
 },
 {

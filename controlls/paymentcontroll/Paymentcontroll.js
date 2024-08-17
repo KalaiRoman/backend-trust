@@ -10,8 +10,10 @@ export const CreateOrderPayment = async (req, res) => {
 
     try {
         const razorpay = new Razorpay({
-            key_id: "rzp_test_EM3reg1Z7aUAw6",
-            key_secret: "CY7By2M7qxBVMuqGPqZzRGe9",
+            // key_id: "rzp_test_EM3reg1Z7aUAw6",
+            // key_secret: "CY7By2M7qxBVMuqGPqZzRGe9",
+            key_id:"rzp_test_a9CrC3a6yr7YSD",
+            key_secret:"eknwZSjIIkMRwGO0HAA14Tc3"
         });
 
         const options = {
